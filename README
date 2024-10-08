@@ -1,0 +1,60 @@
+# BudgetApp
+
+BudgetApp is a simple FastAPI application that allows users to manage their budgets. Users can sign up, log in, and perform CRUD operations on their budgets.
+
+## Features
+
+- User Authentication
+  - Sign up
+  - Log in
+- Budget Management
+  - Create a budget
+  - Update a budget
+  - Delete a budget
+  - Get all budgets for the authenticated user
+
+## Installation
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/BudgetApp.git
+   cd BudgetApp
+
+2. Create a virtual environment:
+    ```sh
+    python3 -m venv venv
+    source venv/bin/activate (mac) or venv\Scripts\activate (windows)
+
+3. Install the dependencies:
+    ```sh
+    pip install -r requirements.txt
+
+4. Create a `.env` file in the root directory and add the following environment variables:
+    ```sh
+    SECRET_KEY=your_secret_key
+    DATABASE_URL=sqlite:///./test.db
+
+5. Run the application:
+    ```sh
+    uvicorn app.main:app --reload
+
+6. Open your browser and navigate to 
+`http://localhost:8000/docs` to view the Swagger documentation.
+
+## Tech Stack
+
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- Passlib
+- Python-Jose
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Contact
+
+Jaiden Sy - [@jaiden_sy](https://www.linkedin.com/in/jaidensy/)
+Project Link: []
+
