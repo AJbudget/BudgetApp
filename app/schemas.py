@@ -21,7 +21,7 @@ class BudgetUpdate(BaseModel):
     name: str
     amount: float
     start_date: Optional[datetime]
-    end_date: Optional[datetime] 
+    end_date: Optional[datetime]
 
 class BudgetResponse(BaseModel):
     id: int
@@ -29,7 +29,27 @@ class BudgetResponse(BaseModel):
     name: str
     amount: float
     start_date: Optional[datetime]
-    end_date: Optional[datetime] 
+    end_date: Optional[datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class ItemCreate(BaseModel):
+    name: str
+    price: float
+    date: datetime
+
+class ItemUpdate(BaseModel):
+    name: str
+    price: float
+    date: datetime
+
+class ItemResponse(BaseModel):
+    id: int
+    budget_id: int
+    name: str
+    price: float
+    date: datetime
+
+    class Config:
+        from_attributes = True
