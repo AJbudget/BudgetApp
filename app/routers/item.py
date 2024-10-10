@@ -10,12 +10,12 @@ router = APIRouter()
 
 @router.post("/budget/{budget_id}/items/", response_model=ItemResponse)
 def create_item(budget_id: int, item: ItemCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    budget = db.query(Budget).filter(Budget.id == budget_id, Budget.user_id == current_user.id).first()
+    budget = db.query(Budget).filter(Budget.id == item.budget_id, Budget.user_id == current_user.id).first()
     if not budget:
         raise HTTPException(status_code=404, detail="Budget not found")
 
     new_item = Item(
-        budget_id=budget_id,
+        budget_id=item.budget_id,
         name=item.name,
         price=item.price,
         date=item.date
@@ -34,6 +34,7 @@ def update_item(item_id: int, item: ItemUpdate, db: Session = Depends(get_db), c
     db_item.name = item.name
     db_item.price = item.price
     db_item.date = item.date
+    db_item.budget_id = item.budget_id
     db.commit()
     db.refresh(db_item)
     return db_item

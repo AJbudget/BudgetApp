@@ -38,11 +38,13 @@ class ItemCreate(BaseModel):
     name: str
     price: float
     date: datetime
+    budget_id: int
 
 class ItemUpdate(BaseModel):
     name: str
     price: float
     date: datetime
+    budget_id: int
 
 class ItemResponse(BaseModel):
     id: int
