@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("/", response_model=BudgetResponse)
 def create_budget(budget: BudgetCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    new_budget = Budget(user_id=current_user.id, amount=budget.amount)
+    new_budget = Budget(user_id=current_user.id, name=budget.name, amount=budget.amount)
     db.add(new_budget)
     db.commit()
     db.refresh(new_budget)
@@ -22,6 +22,7 @@ def update_budget(budget_id: int, budget: BudgetUpdate, db: Session = Depends(ge
     if not db_budget:
         raise HTTPException(status_code=404, detail="Budget not found")
 
+    db_budget.name = budget.name
     db_budget.amount = budget.amount
     db.commit()
     db.refresh(db_budget)

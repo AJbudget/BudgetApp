@@ -11,14 +11,17 @@ class Token(BaseModel):
     token_type: str
 
 class BudgetCreate(BaseModel):
+    name: str
     amount: float
 
 class BudgetUpdate(BaseModel):
+    name: str
     amount: float
 
 class BudgetResponse(BaseModel):
     id: int
     user_id: int
+    name: str
     amount: float
 
     class Config:
