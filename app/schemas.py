@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 
 class SignupRequest(BaseModel):
     username: str
@@ -13,16 +14,22 @@ class Token(BaseModel):
 class BudgetCreate(BaseModel):
     name: str
     amount: float
+    start_date: Optional[datetime]
+    end_date: Optional[datetime]
 
 class BudgetUpdate(BaseModel):
     name: str
     amount: float
+    start_date: Optional[datetime]
+    end_date: Optional[datetime] 
 
 class BudgetResponse(BaseModel):
     id: int
     user_id: int
     name: str
     amount: float
+    start_date: Optional[datetime]
+    end_date: Optional[datetime] 
 
     class Config:
         orm_mode = True

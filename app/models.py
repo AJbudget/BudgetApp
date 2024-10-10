@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, DateTime
 from .database import Base
 
 class User(Base):
@@ -16,3 +16,5 @@ class Budget(Base):
     user_id = Column(Integer, index=True)
     name = Column(String, index=True)
     amount = Column(Float)
+    start_date = Column(DateTime)
+    end_date = Column(DateTime)
