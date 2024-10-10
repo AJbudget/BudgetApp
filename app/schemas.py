@@ -1,6 +1,14 @@
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
 from datetime import datetime
+from enum import Enum
+
+class Recurrence(str, Enum):
+    NONE = "none"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    YEARLY = "yearly"
 
 class SignupRequest(BaseModel):
     username: str
@@ -16,12 +24,14 @@ class BudgetCreate(BaseModel):
     amount: float
     start_date: Optional[datetime]
     end_date: Optional[datetime]
+    recurrence: Recurrence = Recurrence.NONE
 
 class BudgetUpdate(BaseModel):
     name: str
     amount: float
     start_date: Optional[datetime]
     end_date: Optional[datetime]
+    recurrence: Recurrence = Recurrence.NONE
 
 class BudgetResponse(BaseModel):
     id: int
@@ -30,6 +40,7 @@ class BudgetResponse(BaseModel):
     amount: float
     start_date: Optional[datetime]
     end_date: Optional[datetime]
+    recurrence: Recurrence
 
     class Config:
         from_attributes = True

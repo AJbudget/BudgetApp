@@ -15,7 +15,8 @@ def create_budget(budget: BudgetCreate, db: Session = Depends(get_db), current_u
         name=budget.name,
         amount=budget.amount,
         start_date=budget.start_date,
-        end_date=budget.end_date
+        end_date=budget.end_date,
+        recurrence=budget.recurrence
     )
     db.add(new_budget)
     db.commit()
@@ -32,6 +33,7 @@ def update_budget(budget_id: int, budget: BudgetUpdate, db: Session = Depends(ge
     db_budget.amount = budget.amount
     db_budget.start_date = budget.start_date
     db_budget.end_date = budget.end_date
+    db_budget.recurrence = budget.recurrence
     db.commit()
     db.refresh(db_budget)
     return db_budget

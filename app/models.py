@@ -1,6 +1,14 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from .database import Base
+import enum
+
+class Recurrence(enum.Enum):
+    NONE = "none"
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    YEARLY = "yearly"
 
 class User(Base):
     __tablename__ = "users"
@@ -19,6 +27,7 @@ class Budget(Base):
     amount = Column(Float)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
+    recurrence = Column(Enum(Recurrence), default=Recurrence.NONE)  # New field
     items = relationship("Item", back_populates="budget")
 
 class Item(Base):
