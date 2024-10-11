@@ -1,4 +1,4 @@
-import { useState, useContext, FormEvent } from 'react';
+import { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 
 const LoginForm = () => {
@@ -7,21 +7,34 @@ const LoginForm = () => {
   const authContext = useContext(AuthContext);
 
   if (!authContext) {
-    throw new Error('AuthContext must be used within an AuthProvider');
+    return null;
   }
 
   const { login } = authContext;
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await login(username, password);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <div>
+        <label>Username:</label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div>
+        <label>Password:</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
       <button type="submit">Login</button>
     </form>
   );
