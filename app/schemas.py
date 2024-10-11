@@ -15,9 +15,20 @@ class SignupRequest(BaseModel):
     password: str
     email: EmailStr
 
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+
+    class Config:
+        from_attributes = True
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+class TokenData(BaseModel):
+    username: str | None = None
 
 class BudgetCreate(BaseModel):
     name: str

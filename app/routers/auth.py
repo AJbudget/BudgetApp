@@ -4,23 +4,21 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from ..database import get_db
 from ..models import User
-from ..schemas import SignupRequest, Token
-from ..utils import hash_password, verify_password, create_access_token
+from ..schemas import SignupRequest, Token, UserResponse
+from ..utils import get_password_hash, verify_password, create_access_token, get_current_user
 
 router = APIRouter()
 
 @router.post("/signup", response_model=Token)
-def signup(request: SignupRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == request.username).first()
-    if user:
-        raise HTTPException(status_code=400, detail="Username already taken")
-
-    hashed_password = hash_password(request.password)
-    new_user = User(username=request.username, email=request.email, hashed_password=hashed_password)
+def signup(user: SignupRequest, db: Session = Depends(get_db)):
+    db_user = db.query(User).filter(User.username == user.username).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username already registered")
+    hashed_password = get_password_hash(user.password)
+    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
     access_token = create_access_token(data={"sub": new_user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -32,3 +30,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me", response_model=UserResponse)
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user

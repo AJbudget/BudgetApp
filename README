@@ -41,6 +41,26 @@ BudgetApp is a simple FastAPI application that allows users to manage their budg
 6. Open your browser and navigate to 
 `http://localhost:8000/docs` to view the Swagger documentation.
 
+## Running the Frontend
+
+To run the Next.js frontend app:
+
+1. Navigate to the `frontend` directory:
+   ```sh
+   cd frontend
+   
+2. Install the dependencies:
+   ```sh
+   npm install
+   ```
+
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+4. Open your browser and navigate to `http://localhost:3000` to view the frontend.
+
 ## Tech Stack
 
 - FastAPI
