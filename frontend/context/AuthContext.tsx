@@ -35,7 +35,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (username: string, password: string) => {
-    const response = await axios.post('http://127.0.0.1:8000/auth/token', { username, password });
+    const response = await axios.post('http://127.0.0.1:8000/auth/token', new URLSearchParams({
+      username,
+      password
+    }), {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
     localStorage.setItem('token', response.data.access_token);
     setUser(response.data.user);
   };
