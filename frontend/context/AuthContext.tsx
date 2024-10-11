@@ -48,8 +48,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signup = async (username: string, password: string, email: string) => {
-    await axios.post('http://127.0.0.1:8000/auth/signup', { username, password, email });
-    await login(username, password);
+    const response = await axios.post('http://127.0.0.1:8000/auth/signup', { username, password, email });
+    localStorage.setItem('token', response.data.access_token);
+    setUser(response.data.user);
   };
 
   const logout = () => {
