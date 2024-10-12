@@ -9,13 +9,14 @@ interface User {
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: { username: string } | null;
   login: (username: string, password: string) => Promise<void>;
   signup: (username: string, password: string, email: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (username: string, password: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -26,10 +27,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (token) {
       try {
         const decodedUser = decodeJWT(token);
-        console.log('Decoded user from token:', decodedUser);
         setUser(decodedUser);
       } catch (error) {
-        console.error('Failed to decode token:', error);
+        throw new Error('Failed to decode token');
         localStorage.removeItem('token');
       }
     }
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      console.log('Attempting to log in...');
       const response = await axios.post('http://127.0.0.1:8000/auth/token', new URLSearchParams({
         username,
         password
@@ -56,16 +55,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       });
-      console.log('Login response:', response);
       const token = response.data.access_token;
-      console.log('Received token:', token);
       localStorage.setItem('token', token);
       const decodedUser = decodeJWT(token);
-      console.log('Decoded user:', decodedUser);
       setUser(decodedUser);
       router.push('/dashboard');
     } catch (error) {
-      console.error('Login failed:', error);
+      throw new Error('Login failed');
     }
   };
 
@@ -78,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await login(username, password);
       }
     } catch (error) {
-      console.error('Signup failed:', error);
+      throw new Error('Signup failed');
     }
   };
 
@@ -88,8 +84,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     router.push('/');
   };
 
+  const updateProfile = async (username: string, password: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put('http://127.0.0.1:8000/auth/profile', { username, password }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const updatedUser = response.data;
+      setUser(updatedUser);
+    } catch (error) {
+      throw new Error('Profile update failed');
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
