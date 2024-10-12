@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Link from 'next/link';
 import AuthContext from '../context/AuthContext';
-import styles from './Navbar.module.css';
+import styles from '../styles/Navbar.module.css';
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
