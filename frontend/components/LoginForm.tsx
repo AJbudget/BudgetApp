@@ -3,9 +3,10 @@ import AuthContext from '../context/AuthContext';
 import styles from '../styles/AuthForm.module.css';
 
 const LoginForm = () => {
+  const authContext = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const authContext = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState('');
 
   if (!authContext) {
     return null;
@@ -15,7 +16,13 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(username, password);
+    try {
+      await login(username, password);
+      setErrorMessage('');
+    } catch (error) {
+      setErrorMessage('Incorrect username or password. Please try again.');
+      setPassword('');
+    }
   };
 
   return (
@@ -38,6 +45,7 @@ const LoginForm = () => {
           className={styles.input}
         />
       </div>
+      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
       <button type="submit" className={styles.button}>Login</button>
     </form>
   );

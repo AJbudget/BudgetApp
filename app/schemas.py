@@ -10,6 +10,10 @@ class Recurrence(str, Enum):
     MONTHLY = "monthly"
     YEARLY = "yearly"
 
+class UpdateProfileRequest(BaseModel):
+    username: str
+    password: str | None = None
+
 class SignupRequest(BaseModel):
     username: str
     password: str

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from ..database import get_db
 from ..models import User
-from ..schemas import SignupRequest, Token, UserResponse
+from ..schemas import SignupRequest, Token, UserResponse, UpdateProfileRequest
 from ..utils import get_password_hash, verify_password, create_access_token, get_current_user
 
 router = APIRouter()
@@ -34,3 +34,21 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @router.get("/me", response_model=UserResponse)
 def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.put("/profile", response_model=UserResponse)
+def update_profile(
+    profile: UpdateProfileRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = db.query(User).filter(User.id == current_user.id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.username = profile.username
+    if profile.password:
+        user.hashed_password = get_password_hash(profile.password)
+    
+    db.commit()
+    db.refresh(user)
+    return user
